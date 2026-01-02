@@ -47,10 +47,13 @@ app.get('/_debug/list-admin', (req, res) => {
     res.json({ files });
   });
 });
-
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin', 'login.html')); // o el nombre de tu archivo real
+});
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
   console.log(`URL pública esperada: http://localhost:${PORT}/`);
   console.log(`Admin: http://localhost:${PORT}/admin`);
   console.log(`Prueba API: http://localhost:${PORT}/api/test`);
 });
+
