@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>Dashboard Admin</title>
-  <link rel="stylesheet" href="admin-styles.css">
+  <meta charset="UTF-8">
+  <title>Admin - Agregar Reseña</title>
 </head>
 <body>
-  <h1>Panel de Control</h1>
-  <section>
-    <h2>Registrar Nuevo Usuario</h2>
-    <form id="register-form">
-      <input type="email" placeholder="Email del nuevo usuario">
-      <input type="password" placeholder="Contraseña temporal">
-      <button type="submit">Agregar</button>
-    </form>
-  </section>
-  <section>
-    <h2>Agregar Reseña</h2>
-    <!-- Form similar: nombre lugar, rating, texto, coords para pin en mapa -->
-  </section>
-  <script src="admin-script.js"></script>
+  <h1>Agregar Nueva Reseña (Admin)</h1>
+  <form id="reviewForm">
+    <label>Lugar: <input type="text" id="lugar" required></label><br>
+    <label>Calificación (1-5): <input type="number" id="rating" min="1" max="5" required></label><br>
+    <label>Texto: <textarea id="texto" required></textarea></label><br>
+    <button type="submit">Guardar</button>
+  </form>
+
+  <script>
+    document.getElementById('reviewForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = {
+        lugar: document.getElementById('lugar').value,
+        rating: document.getElementById('rating').value,
+        texto: document.getElementById('texto').value
+      };
+      alert('Reseña guardada (simulado): ' + JSON.stringify(data));
+      // En el futuro: fetch('/api/reviews', { method: 'POST', body: JSON.stringify(data) })
+    });
+  </script>
 </body>
 </html>
