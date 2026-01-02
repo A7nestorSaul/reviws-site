@@ -36,6 +36,29 @@ app.get('/api/test', (req, res) => {
 });
 
 // Si agregas más rutas/API en el futuro, ponlas aquí
+// Protección simple para todo lo que esté en /admin
+const basicAuth = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    res.set('WWW-Authenticate', 'Basic realm="Admin Area"');
+    return res.status(401).send('Acceso denegado - Usuario/Contraseña requeridos');
+  }
+
+  const base64Credentials = authHeader.split(' ')[1];
+  const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+  const [username, password] = credentials.split(':');
+
+  // Cambia estos valores por los tuyos (¡usa algo seguro!)
+  if (username === 'admin' && password === 'tu-contrasena-segura-2025') {
+    return next(); // OK
+  }
+
+  res.set('WWW-Authenticate', 'Basic realm="Admin Area"');
+  res.status(401).send('Credenciales incorrectas');
+};
+
+// Aplica la protección a todas las rutas /admin
+app.use('/admin', basicAuth);
 
 // Iniciar servidor
 app.listen(PORT, () => {
@@ -44,5 +67,6 @@ app.listen(PORT, () => {
   console.log(`Admin: http://localhost:${PORT}/admin`);
   console.log(`Prueba API: http://localhost:${PORT}/api/test`);
 });
+
 
 
