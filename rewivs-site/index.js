@@ -1,27 +1,31 @@
-// index.js - Servidor Express básico para Render
-require('dotenv').config(); // Carga variables de entorno (ej: PORT)
+// index.js - Servidor Express básico para Render (versión actualizada)
+require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Render fuerza PORT, fallback a 3000 local
+const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(cors());              // Permite peticiones desde cualquier origen (útil para pruebas)
-app.use(express.json());      // Para poder recibir JSON en POST
+app.use(cors());
+app.use(express.json());
 
 // Servir archivos estáticos
-app.use(express.static(path.join(__dirname, 'public')));       // Página principal
-app.use('/admin', express.static(path.join(__dirname, 'admin'))); // Panel admin
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Servir admin y forzar login.html como index por defecto
+app.use('/admin', express.static(path.join(__dirname, 'admin'), { index: 'login.html' }));
 
 // Rutas principales
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.get('/admin', (req, res) => {
+// Catch-all para /admin/* (útil para SPA o rutas internas)
+app.get('/admin*', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin', 'login.html'));
 });
 
@@ -35,38 +39,18 @@ app.get('/api/test', (req, res) => {
   });
 });
 
-// Si agregas más rutas/API en el futuro, ponlas aquí
-// Protección simple para todo lo que esté en /admin
-const basicAuth = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
-    res.set('WWW-Authenticate', 'Basic realm="Admin Area"');
-    return res.status(401).send('Acceso denegado - Usuario/Contraseña requeridos');
-  }
+// Endpoint de diagnóstico opcional (temporal) para listar archivos en admin
+app.get('/_debug/list-admin', (req, res) => {
+  const adminPath = path.join(__dirname, 'admin');
+  fs.readdir(adminPath, (err, files) => {
+    if (err) return res.status(500).json({ error: 'No se puede leer admin', detalles: err.message });
+    res.json({ files });
+  });
+});
 
-  const base64Credentials = authHeader.split(' ')[1];
-  const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
-  const [username, password] = credentials.split(':');
-
-  // Cambia estos valores por los tuyos (¡usa algo seguro!)
-  if (username === 'admin' && password === 'tu-contrasena-segura-2025') {
-    return next(); // OK
-  }
-
-  res.set('WWW-Authenticate', 'Basic realm="Admin Area"');
-  res.status(401).send('Credenciales incorrectas');
-};
-
-// Aplica la protección a todas las rutas /admin
-app.use('/admin', basicAuth);
-
-// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
   console.log(`URL pública esperada: http://localhost:${PORT}/`);
   console.log(`Admin: http://localhost:${PORT}/admin`);
   console.log(`Prueba API: http://localhost:${PORT}/api/test`);
 });
-
-
-
