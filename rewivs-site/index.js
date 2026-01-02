@@ -6,7 +6,7 @@ const path = require('path');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Render fuerza PORT, fallback a 3000 local
+const PORT = process.env.PORT || 10000; // Render fuerza PORT, fallback a 3000 local
 
 // Middleware
 app.use(cors());              // Permite peticiones desde cualquier origen (útil para pruebas)
@@ -44,3 +44,4 @@ app.listen(PORT, () => {
   console.log(`Admin: http://localhost:${PORT}/admin`);
   console.log(`Prueba API: http://localhost:${PORT}/api/test`);
 });
+
