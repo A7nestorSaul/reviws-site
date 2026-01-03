@@ -1,10 +1,9 @@
-// index.js - Servidor Express básico para Render (versión actualizada)
+// index.js - Servidor Express para Render (2026 compatible)
 require('dotenv').config();
 
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,22 +13,19 @@ app.use(cors());
 app.use(express.json());
 
 // Servir archivos estáticos
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Servir admin y forzar login.html como index por defecto
-app.use('/admin', express.static(path.join(__dirname, 'admin'), { index: 'login.html' }));
+app.use(express.static(path.join(__dirname, 'public')));      // Página principal
+app.use('/admin', express.static(path.join(__dirname, 'admin')));  // Panel admin
 
 // Rutas principales
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Catch-all para /admin/* (útil para SPA o rutas internas)
-app.get('/admin*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin', 'login.html'));
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin', 'login.html'));  // o 'index.html' si usas ese nombre
 });
 
-// Ruta de prueba para verificar que el backend está vivo
+// Ruta de prueba para confirmar que el backend responde
 app.get('/api/test', (req, res) => {
   res.json({
     mensaje: '¡Backend funcionando correctamente!',
@@ -39,21 +35,28 @@ app.get('/api/test', (req, res) => {
   });
 });
 
-// Endpoint de diagnóstico opcional (temporal) para listar archivos en admin
-app.get('/_debug/list-admin', (req, res) => {
-  const adminPath = path.join(__dirname, 'admin');
-  fs.readdir(adminPath, (err, files) => {
-    if (err) return res.status(500).json({ error: 'No se puede leer admin', detalles: err.message });
-    res.json({ files });
-  });
-});
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin', 'login.html')); // o el nombre de tu archivo real
-});
+// Protección básica opcional para admin (descomenta si la quieres activar)
+// const basicAuth = (req, res, next) => {
+//   const authHeader = req.headers.authorization;
+//   if (!authHeader) {
+//     res.set('WWW-Authenticate', 'Basic realm="Admin Area"');
+//     return res.status(401).send('Acceso denegado');
+//   }
+//   const base64Credentials = authHeader.split(' ')[1];
+//   const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+//   const [username, password] = credentials.split(':');
+//   if (username === 'admin' && password === 'tu-contrasena-segura') {
+//     return next();
+//   }
+//   res.set('WWW-Authenticate', 'Basic realm="Admin Area"');
+//   res.status(401).send('Credenciales incorrectas');
+// };
+// app.use('/admin', basicAuth);
+
+// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
-  console.log(`URL pública esperada: http://localhost:${PORT}/`);
+  console.log(`URL pública: http://localhost:${PORT}/`);
   console.log(`Admin: http://localhost:${PORT}/admin`);
   console.log(`Prueba API: http://localhost:${PORT}/api/test`);
 });
-
