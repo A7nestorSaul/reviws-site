@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>Admin Login - Rewivs</title>
-  <link rel="stylesheet" href="admin-styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Admin - Rewivs</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 100px; }
+    form { max-width: 400px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+    input { display: block; width: 100%; margin: 10px 0; padding: 10px; }
+    button { padding: 10px 20px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+  </style>
 </head>
 <body>
-  <form id="login-form">
-    <h2>Login Admin</h2>
-    <input type="email" placeholder="Email" required>
+  <h1>Login Panel Admin</h1>
+  <p>Solo personal autorizado</p>
+
+  <form>
+    <input type="text" placeholder="Usuario" required>
     <input type="password" placeholder="Contraseña" required>
     <button type="submit">Entrar</button>
   </form>
-  <script src="admin-script.js"></script>
+
+  <p><a href="/">Volver a la página principal</a></p>
 </body>
 </html>
