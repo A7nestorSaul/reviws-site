@@ -1,34 +1,21 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <title>Rewivs - Reseñas de [Tu Ciudad]</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script> <!-- Para mapa gratis -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rewivs - Reseñas de tu Ciudad</title>
+  <link rel="stylesheet" href="styles.css"> <!-- si tienes CSS -->
 </head>
 <body>
   <header>
-    <h1>Rewivs: Reseñas Verificadas de [Tu Ciudad]</h1>
-    <div class="search-bar">
-      <input type="text" id="search" placeholder="¿Qué tienes antojo? ¿Qué quieres comer?">
-      <button>Buscar</button>
-    </div>
+    <h1>Reseñas Verificadas de tu Ciudad</h1>
   </header>
   
-  <section id="map" style="height: 400px;"></section> <!-- Mapa con pines -->
-  
-  <section id="reviews">
-    <h2>Reseñas Destacadas</h2>
-    <!-- Tarjetas de reseñas (cargadas con JS) -->
-    <div class="review-card">
-      <img src="assets/restaurante.jpg" alt="Restaurante X">
-      <h3>Restaurante X</h3>
-      <div class="rating">★★★★★</div>
-      <p>"Delicioso!" - Usuario Verificado</p>
-    </div>
-    <!-- Más tarjetas... -->
-  </section>
-  
-  <script src="script.js"></script>
+  <main>
+    <p>Bienvenido. Aquí verás reseñas confiables.</p>
+    <a href="/admin">Ir al Panel Admin (solo autorizados)</a>
+  </main>
+
+  <script src="script.js"></script> <!-- si tienes JS -->
 </body>
 </html>
